@@ -47,21 +47,27 @@ public class Config {
 	}
 
 	/**
-	 * Escribe el par Clave ; Valor en el fichero de configuración y devuelve un boolean segun su exito
-	 * @param path Ruta del archivo
-	 * @param separator Carácter separador del archivo Clave ; Valor
-	 * @param Key Clave a cambiar
-	 * @param Value Valor a añadir
+	 * Escribe el par Clave ; Valor en el fichero de configuración y devuelve un
+	 * boolean segun su exito
+	 * 
+	 * @param path
+	 *            Ruta del archivo
+	 * @param separator
+	 *            Carácter separador del archivo Clave ; Valor
+	 * @param Key
+	 *            Clave a cambiar
+	 * @param Value
+	 *            Valor a añadir
 	 * @return true si consigue guardar cambios en cualquier otro caso false
 	 */
 	public static boolean WriteConfig(String path, String separator, String Key, String Value) {
 		boolean changed = false;
 		Map<String, String> values = ReadConfig(path, separator);
 		values.replace(Key, Value);
-		FileWriter fileWriter=null;
+		FileWriter fileWriter = null;
 		try {
 			fileWriter = new FileWriter(path);
-		} catch (IOException e1) {	
+		} catch (IOException e1) {
 			System.err.println("Error al abrir el archivo. " + e1.getMessage());
 		}
 
@@ -69,14 +75,14 @@ public class Config {
 			try {
 				fileWriter.write(entry.getKey() + separator + entry.getValue());
 			} catch (IOException e) {
-				System.err.println("Error al escribir." +e.getMessage());
+				System.err.println("Error al escribir." + e.getMessage());
 			} finally {
 				try {
 					fileWriter.flush();
 					fileWriter.close();
-					changed=true;
+					changed = true;
 				} catch (IOException e) {
-					System.err.println("Error al cerrar o vaciar fileWriter. "+e.getMessage());
+					System.err.println("Error al cerrar o vaciar fileWriter. " + e.getMessage());
 				}
 
 			}
