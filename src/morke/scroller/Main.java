@@ -1,23 +1,18 @@
 package morke.scroller;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Map;
+import java.io.IOException;
 
 import morke.scroller.display.Display;
 import morke.scroller.utils.Config;
 
 public class Main {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		// Load configuration
-		Path path = Paths.get("src/");
-		Map<String,String> valores = Config.ReadConfig(path.toAbsolutePath().toString()+"\\Config.ini", "=");
-		
-		Config.WriteConfig(path.toAbsolutePath().toString()+"\\Config.ini", "=", "windowed", "RICHARD_HDP");
-		
+		Config.ReadConfig("config.ini");		
+			
 		// Create display
-		Display disp = new Display("Test", 1280, 720);	
+		Display disp = new Display();	
 		
 		while(!disp.shouldWindowClose())
 		{

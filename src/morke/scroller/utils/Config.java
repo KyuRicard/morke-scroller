@@ -1,53 +1,58 @@
 package morke.scroller.utils;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.file.Files;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 public class Config {
+
+	private static final String delimiter = "=";
+	public static Map<String, String> config;
 
 	/**
 	 * Lee el fichero de configuración y devuelve un mapa con sus valores
 	 * 
 	 * @param path
 	 *            Ruta del archivo
-	 * @param separator
-	 *            Carácter separador del archivo Clave ; Valor
 	 * @return Map<String,String> Mapa con los valores del fichero
 	 */
-	public static Map<String, String> ReadConfig(String path, String separator) {
-		System.out.println(path);
-		Map<String, String> values = new HashMap<>();
-		BufferedReader br = null;
-		String line = "";
-		try {
-			br = new BufferedReader(new FileReader(path));
-			while ((line = br.readLine()) != null) {
-				if(line.isEmpty()) continue;			
-				String[] splits = line.split(separator);
-				values.put(splits[0], splits[1]);
-			}
-		} catch (FileNotFoundException e) {
-			System.err.println("Archivo no encontrado");
+	public static Map<String, String> ReadConfig(String path) throws IOException {
+		/*
+		 * System.out.println(path); Map<String, String> values = new HashMap<>();
+		 * BufferedReader br = null; String line = ""; try { br = new BufferedReader(new
+		 * FileReader(path)); while ((line = br.readLine()) != null) { if
+		 * (line.isEmpty()) continue; String[] splits = line.split(delimiter);
+		 * values.put(splits[0], splits[1]); } } catch (FileNotFoundException e) {
+		 * System.err.println("Archivo no encontrado"); CreateDefaultConfig(path); }
+		 * catch (IOException e) {
+		 * System.err.println("No se ha podido abrir el archivo. " + e.getMessage()); }
+		 * finally { if (br != null) { try { br.close(); } catch (IOException e) {
+		 * System.err.println("No se ha podido cerrar el archivo. " + e.getMessage()); }
+		 * } } config = values; return values;
+		 */
+		File f = new File(path);
+		
+		if (!Files.exists(f.toPath())) {
 			CreateDefaultConfig(path);
-		} catch (IOException e) {
-			System.err.println("No se ha podido abrir el archivo. " + e.getMessage());
-		} finally {
-			if (br != null) {
-				try {
-					br.close();
-				} catch (IOException e) {
-					System.err.println("No se ha podido cerrar el archivo. " + e.getMessage());
-				}
-			}
 		}
-		return values;
+		
+		config = new HashMap<>();
+		
+		List<String> lines = Files.readAllLines(f.toPath());
+		
+		for(String line : lines)
+		{
+			if(line.isEmpty() || line.startsWith(";")) continue;
+			String[] formated = line.split(delimiter);
+			config.put(formated[0], formated[1]);
+		}
+		
+		return config;
 	}
 
 	/**
@@ -56,68 +61,53 @@ public class Config {
 	 * 
 	 * @param path
 	 *            Ruta del archivo
-	 * @param separator
-	 *            Carácter separador del archivo Clave ; Valor
 	 * @param Key
 	 *            Clave a cambiar
 	 * @param Value
 	 *            Valor a añadir
 	 * @return true si consigue guardar cambios en cualquier otro caso false
 	 */
-	public static boolean WriteConfig(String path, String separator, String Key, String Value) {
+	public static boolean WriteConfig(String path, String Key, String Value) {
 		boolean changed = false;
-		Map<String, String> values = ReadConfig(path, separator);
-		values.replace(Key, Value);
-		FileWriter fileWriter = null;
+		config.replace(Key, Value);
 		try {
-			fileWriter = new FileWriter(path);
-		} catch (IOException e1) {
-			System.err.println("Error al abrir el archivo. " + e1.getMessage());
-		}
-
-		for (Entry<String, String> entry : values.entrySet()) {
-			try {
-				fileWriter.write(entry.getKey() + separator + entry.getValue());
-			} catch (IOException e) {
-				System.err.println("Error al escribir." + e.getMessage());
-			} finally {
-				try {
-					fileWriter.flush();
-					fileWriter.close();
-					changed = true;
-				} catch (IOException e) {
-					System.err.println("Error al cerrar o vaciar fileWriter. " + e.getMessage());
-				}
-
+			PrintWriter writer = new PrintWriter(path);
+			for (Entry<String, String> entry : config.entrySet()) {
+				writer.println(entry.getKey() + delimiter + entry.getValue());
 			}
+			writer.close();
+		} catch (IOException e) {
+			System.err.println("Error al escribir." + e.getMessage());
 		}
 
 		return changed;
 	}
-	
-	public static void CreateDefaultConfig(String path)
-	{
+
+	public static void CreateDefaultConfig(String path) {
 		System.err.println("Generando archivo por defecto ...");
-		FileWriter fileWriter = null;
 		try {
-			File f = new File(path);
-			f.createNewFile();
-			fileWriter = new FileWriter(path);
-			fileWriter.write("width=640\nheight=480\nfov=60\ndistance=1000\nfullscreen=0\n");			
+			PrintWriter writer = new PrintWriter(path);
+			writer.println("width" + delimiter + "640");
+			writer.println("height" + delimiter + "480");
+			writer.println("fov" + delimiter + "60");
+			writer.println("distance" + delimiter + "1000");
+			writer.println("fullscreen" + delimiter + "0");
+			writer.close();
 		} catch (IOException e1) {
 			System.err.println("Error al crear el archivo. " + e1.getMessage());
-		}finally{
-			try {
-				fileWriter.flush();
-				fileWriter.close();
-			} catch (IOException e) {
-				System.err.println("Error al cerrar o vaciar fileWriter. " + e.getMessage());
-			}
-			
 		}
-		
-		
-
-
+	}
+	
+	public static String GetValue(String key)
+	{
+		if(config.containsKey(key))
+			return config.get(key);
+		else
+			return "";
+	}
+	
+	public static int GetValueInt(String key)
+	{
+		return Integer.parseInt(GetValue(key));
 	}
 }

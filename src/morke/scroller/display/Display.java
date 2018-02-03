@@ -1,23 +1,22 @@
 package morke.scroller.display;
 
-import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import org.lwjgl.glfw.GLFW;
-import org.lwjgl.system.Configuration;
+
+import morke.scroller.Vars;
+import morke.scroller.utils.Config;
 
 public class Display {
-	private String title;
-	private int width, height;
 	private long window;
 	
-	public Display(String title, int width, int height)
+	public Display()
 	{
-		this.title = title;
-		this.width = width;
-		this.height = height;
-
+		int width = Config.GetValueInt("width");
+		int height = Config.GetValueInt("height");
+		String title = Vars.NAME;
+		
 		Path path = Paths.get("libs/lwjgl/");
 	    String librarypath = path.toAbsolutePath().toString();
 
