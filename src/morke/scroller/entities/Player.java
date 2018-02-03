@@ -1,18 +1,19 @@
-package entities;
+package morke.scroller.entities;
 
-import sprite.Sprite;
 import java.awt.Image;
 //import java.awt.event.KeyEvent;
 //import javax.swing.ImageIcon;
 
-public class Entities {
+import morke.scroller.sprite.Sprite;
+
+public class Player {
 	
 	private int x;
 	private int y;
 	private Image imagen;
 	private Sprite sprite;
 	
-	public Entities(){
+	public Player(){
 		sprite.creaImagen();
 	}
 	
