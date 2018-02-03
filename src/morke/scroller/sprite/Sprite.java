@@ -1,4 +1,4 @@
-package sprite;
+package morke.scroller.sprite;
 
 import java.awt.Image;
 //import java.awt.event.KeyEvent;
