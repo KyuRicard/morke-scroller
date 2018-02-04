@@ -62,6 +62,16 @@ public class Config {
 		return changed;
 	}
 	
+	public static boolean WriteConfig(String key, int intValue)
+	{
+		return WriteConfig(key, Integer.toString(intValue));
+	}
+	
+	public static boolean WriteConfig(String key, boolean boolValue)
+	{
+		return WriteConfig(key, boolValue ? 1 : 0);
+	}
+	
 	public static boolean SaveConfig(String path)
 	{
 		try {
@@ -86,6 +96,7 @@ public class Config {
 			writer.println("fov" + delimiter + "60");
 			writer.println("distance" + delimiter + "1000");
 			writer.println("fullscreen" + delimiter + "0");
+			writer.println("windowed" + delimiter + "0");
 			writer.close();
 		} catch (IOException e1) {
 			System.err.println("Error al crear el archivo. " + e1.getMessage());
@@ -97,7 +108,7 @@ public class Config {
 		if(config.containsKey(key))
 			return config.get(key);
 		else
-			return "";
+			return "-1";
 	}
 	
 	public static int GetValueInt(String key)
