@@ -20,6 +20,7 @@ public class Config {
 	 * @param path
 	 *            Ruta del archivo
 	 * @return Map<String,String> Mapa con los valores del fichero
+	 * @throws IOException 
 	 */
 	public static Map<String, String> ReadConfig(String path) throws IOException {
 		/*
@@ -59,28 +60,32 @@ public class Config {
 	 * Escribe el par Clave ; Valor en el fichero de configuración y devuelve un
 	 * boolean segun su exito
 	 * 
-	 * @param path
-	 *            Ruta del archivo
 	 * @param Key
 	 *            Clave a cambiar
 	 * @param Value
 	 *            Valor a añadir
 	 * @return true si consigue guardar cambios en cualquier otro caso false
 	 */
-	public static boolean WriteConfig(String path, String Key, String Value) {
+	public static boolean WriteConfig(String Key, String Value) {
 		boolean changed = false;
 		config.replace(Key, Value);
+		
+		return changed;
+	}
+	
+	public static boolean SaveConfig(String path)
+	{
 		try {
 			PrintWriter writer = new PrintWriter(path);
 			for (Entry<String, String> entry : config.entrySet()) {
 				writer.println(entry.getKey() + delimiter + entry.getValue());
 			}
 			writer.close();
+			return true;
 		} catch (IOException e) {
 			System.err.println("Error al escribir." + e.getMessage());
+			return false;
 		}
-
-		return changed;
 	}
 
 	public static void CreateDefaultConfig(String path) {

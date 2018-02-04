@@ -10,7 +10,7 @@ public class Main {
 	public static void main(String[] args) throws IOException {
 		// Load configuration
 		Config.ReadConfig("config.ini");		
-			
+		
 		// Create display
 		Display disp = new Display();	
 		
@@ -26,6 +26,12 @@ public class Main {
 			// Render present
 			disp.swapBuffers();
 		}
+		
+		// Save configuration
+		Config.SaveConfig("config.ini");
+		
+		// Delete display
+		disp.finalize();
 	}
 
 }

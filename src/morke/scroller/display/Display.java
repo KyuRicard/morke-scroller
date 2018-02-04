@@ -3,7 +3,7 @@ package morke.scroller.display;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import org.lwjgl.glfw.GLFW;
+import static org.lwjgl.glfw.GLFW.*;
 
 import morke.scroller.Vars;
 import morke.scroller.utils.Config;
@@ -22,48 +22,54 @@ public class Display {
 
 	    System.setProperty("org.lwjgl.librarypath", librarypath);
 		
-	    if(!GLFW.glfwInit())
+	    if(!glfwInit())
 	    {
 	    	System.err.println("Error initializating GLFW.");
 	    }
 	    
-		GLFW.glfwDefaultWindowHints();
-		window = GLFW.glfwCreateWindow(width, height, title, 0, 0);
+		glfwDefaultWindowHints();
+		window = glfwCreateWindow(width, height, title, 0, 0);
 		if(window == 0)
 		{
 			System.err.println("GLFW: error creating the window.");
 			return;
 		}
 		
-		GLFW.glfwSetKeyCallback(window, (wnd, key, scancode, action, mods) -> {
+		glfwSetKeyCallback(window, (wnd, key, scancode, action, mods) -> {
 			
 		});
 		
-		GLFW.glfwMakeContextCurrent(window);
+		glfwSetWindowSizeCallback(window, (wnd, w, h) -> {
+			Config.WriteConfig("width", Integer.toString(w));
+			Config.WriteConfig("height", Integer.toString(h));
+		});
 		
-		GLFW.glfwSwapInterval(1);
 		
-		GLFW.glfwShowWindow(window);
+		glfwMakeContextCurrent(window);
+		
+		glfwSwapInterval(1);
+		
+		glfwShowWindow(window);
 	}
 	
 	@Override
 	public void finalize()
 	{
-		GLFW.glfwDestroyWindow(window);
+		glfwDestroyWindow(window);
 	}
 	
 	public boolean shouldWindowClose()
 	{
-		return GLFW.glfwWindowShouldClose(window);
+		return glfwWindowShouldClose(window);
 	}
 	
 	public void eventHandler()
 	{
-		GLFW.glfwPollEvents();
+		glfwPollEvents();
 	}
 	
 	public void swapBuffers()
 	{
-		GLFW.glfwSwapBuffers(window);
+		glfwSwapBuffers(window);
 	}
 }
