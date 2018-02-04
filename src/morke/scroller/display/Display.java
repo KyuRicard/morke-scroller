@@ -6,6 +6,7 @@ import java.nio.file.Paths;
 import static org.lwjgl.glfw.GLFW.*;
 
 import morke.scroller.Vars;
+import morke.scroller.input.Input;
 import morke.scroller.utils.Config;
 
 public class Display {
@@ -36,7 +37,7 @@ public class Display {
 		}
 		
 		glfwSetKeyCallback(window, (wnd, key, scancode, action, mods) -> {
-			
+			Input.getInstance().addKey(key, scancode, action, mods);
 		});
 		
 		glfwSetWindowSizeCallback(window, (wnd, w, h) -> {

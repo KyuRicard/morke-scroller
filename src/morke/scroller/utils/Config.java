@@ -23,19 +23,6 @@ public class Config {
 	 * @throws IOException 
 	 */
 	public static Map<String, String> ReadConfig(String path) throws IOException {
-		/*
-		 * System.out.println(path); Map<String, String> values = new HashMap<>();
-		 * BufferedReader br = null; String line = ""; try { br = new BufferedReader(new
-		 * FileReader(path)); while ((line = br.readLine()) != null) { if
-		 * (line.isEmpty()) continue; String[] splits = line.split(delimiter);
-		 * values.put(splits[0], splits[1]); } } catch (FileNotFoundException e) {
-		 * System.err.println("Archivo no encontrado"); CreateDefaultConfig(path); }
-		 * catch (IOException e) {
-		 * System.err.println("No se ha podido abrir el archivo. " + e.getMessage()); }
-		 * finally { if (br != null) { try { br.close(); } catch (IOException e) {
-		 * System.err.println("No se ha podido cerrar el archivo. " + e.getMessage()); }
-		 * } } config = values; return values;
-		 */
 		File f = new File(path);
 		
 		if (!Files.exists(f.toPath())) {
@@ -60,15 +47,17 @@ public class Config {
 	 * Escribe el par Clave ; Valor en el fichero de configuración y devuelve un
 	 * boolean segun su exito
 	 * 
-	 * @param Key
+	 * @param key
 	 *            Clave a cambiar
-	 * @param Value
+	 * @param value
 	 *            Valor a añadir
 	 * @return true si consigue guardar cambios en cualquier otro caso false
 	 */
-	public static boolean WriteConfig(String Key, String Value) {
+	public static boolean WriteConfig(String key, String value) {
 		boolean changed = false;
-		config.replace(Key, Value);
+		if(config.containsKey(key))
+			config.replace(key, value);
+		else config.put(key, value);
 		
 		return changed;
 	}
